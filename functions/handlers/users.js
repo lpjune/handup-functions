@@ -128,7 +128,7 @@ exports.getUserDetails = (req, res) => {
             if (doc.exists) {
                 userData.user = doc.data();
                 return db
-                    .collection("screams")
+                    .collection("questions")
                     .where("userHandle", "==", req.params.handle)
                     .orderBy("createdAt", "desc")
                     .get();
@@ -137,16 +137,16 @@ exports.getUserDetails = (req, res) => {
             }
         })
         .then(data => {
-            userData.screams = [];
+            userData.questions = [];
             data.forEach(doc => {
-                userData.screams.push({
+                userData.questions.push({
                     body: doc.data().body,
                     createdAt: doc.data().createdAt,
                     userHandle: doc.data().userHandle,
                     userImage: doc.data().userImage,
                     likeCount: doc.data().likeCount,
                     commentCount: doc.data().commentCount,
-                    screamId: doc.id
+                    questionId: doc.id
                 });
             });
             return res.json(userData);
@@ -190,7 +190,7 @@ exports.getAuthenticatedUser = (req, res) => {
                     recipient: doc.data().recipient,
                     sender: doc.data().sender,
                     createdAt: doc.data().createdAt,
-                    screamId: doc.data().screamId,
+                    questionId: doc.data().questionId,
                     type: doc.data().type,
                     read: doc.data().read,
                     notificationId: doc.id
