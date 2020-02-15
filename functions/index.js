@@ -14,6 +14,10 @@ const {
     deleteQuestion
 } = require("./handlers/questions");
 const {
+    getAllCourses,
+    getCourse
+} = require("./handlers/courses");
+const {
     signup,
     login,
     uploadImage,
@@ -39,6 +43,12 @@ app.get("/question/:questionId/unlike", FBAuth, unlikeQuestion);
 // Post comment on question
 app.post("/question/:questionId/comment", FBAuth, commentOnQuestion);
 
+// Course routes
+//  Get all courses 
+app.get("/courses", getAllCourses);
+// Get one course
+app.get("/course/:courseId", getCourse);
+
 // User routes
 // Sign up route
 app.post("/signup", signup);
@@ -54,6 +64,8 @@ app.get("/user", FBAuth, getAuthenticatedUser);
 app.get("/user/:handle", getUserDetails);
 // Mark notification as read route
 app.post("/notifications", FBAuth, markNotificationsRead);
+
+
 
 exports.api = functions.https.onRequest(app);
 

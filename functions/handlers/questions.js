@@ -9,7 +9,7 @@ exports.getAllQuestions = (req, res) => {
             let questions = [];
             data.forEach(doc => {
                 questions.push({
-                    question: doc.id,
+                    questionId: doc.id,
                     body: doc.data().body,
                     userHandle: doc.data().userHandle,
                     createdAt: doc.data().createdAt,
