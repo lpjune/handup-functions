@@ -70,5 +70,9 @@ const userDetails = {
             userHandle: "user",
             questionId: "3IOnFoQexRcofs5OhBXO"
         }
+    ],
+    courses: [
+        {courseId: "1232135SAD43412ad34"},
+        {courseId: "123asd41234asdfq234"}
     ]
 };

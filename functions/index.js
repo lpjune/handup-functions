@@ -24,7 +24,8 @@ const {
     addUserDetails,
     getAuthenticatedUser,
     getUserDetails,
-    markNotificationsRead
+    markNotificationsRead,
+    joinCourse
 } = require("./handlers/users");
 
 // Question routes
@@ -64,6 +65,8 @@ app.get("/user", FBAuth, getAuthenticatedUser);
 app.get("/user/:handle", getUserDetails);
 // Mark notification as read route
 app.post("/notifications", FBAuth, markNotificationsRead);
+// Join course
+app.post("/user/courses/:courseId", FBAuth, joinCourse);
 
 
 

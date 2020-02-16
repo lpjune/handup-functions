@@ -275,3 +275,16 @@ exports.markNotificationsRead = (req, res) => {
             res.status(500).json({ error: err.code });
         });
 };
+
+// TODO: add course object not just string id
+exports.joinCourse = (req, res) => {
+    db.doc(`/users/${req.user.handle}`)
+        .update({courses:[ req.params.courseId ]})
+        .then(() => {
+            return res.json({ message: "Course added successfully" });
+        })
+        .catch(err => {
+            console.error(err);
+            return res.status(500).json({ error: err.code });
+        });
+};
