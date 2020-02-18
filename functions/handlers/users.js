@@ -278,10 +278,42 @@ exports.markNotificationsRead = (req, res) => {
 
 // TODO: add course object not just string id
 exports.joinCourse = (req, res) => {
-    db.doc(`/users/${req.user.handle}`)
-        .update({courses:[ req.params.courseId ]})
-        .then(() => {
-            return res.json({ message: "Course added successfully" });
+    userDoc = db.doc(`/users/${req.user.handle}`);
+    allCourses = [req.params.courseId];
+    userDoc
+        .get()
+        .then(doc => {
+            userData = doc.data()
+            if (!doc.exists) {
+                doc.set({ courses: allCourses })
+                    .then(() => {
+                        return res.json({
+                            message: "Course added successfully"
+                        });
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        return res.status(500).json({ error: err.code });
+                    });
+            }
+
+            if(userData.courses.includes(req.params.courseId)) {
+                return res.json({
+                    message: "Course already added"
+                });
+            }
+
+            userData.courses.forEach(course => {
+                allCourses.push(course);
+            });
+            db.doc(`/users/${req.user.handle}`).update({ courses: allCourses })
+                .then(() => {
+                    return res.json({ message: "Course added successfully" });
+                })
+                .catch(err => {
+                    console.error(err);
+                    return res.status(500).json({ error: err.code });
+                });
         })
         .catch(err => {
             console.error(err);
