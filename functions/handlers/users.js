@@ -300,7 +300,7 @@ exports.joinCourse = (req, res) => {
             userData.courses.forEach(course => {
                 allCourses.push(course);
             });
-            db.doc(`/users/${req.user.handle}`)
+            userDoc
                 .update({ courses: allCourses })
                 .then(() => {
                     return res.json({ message: "Course added successfully" });
@@ -319,4 +319,33 @@ exports.joinCourse = (req, res) => {
 // Leave a course
 exports.leaveCourse = (req, res) => {
     userDoc = db.doc(`/users/${req.user.handle}`);
+    userDoc
+        .get()
+        .then(doc => {
+            userData = doc.data();
+            if (!doc.exists) {
+                console.error(err);
+                return res.status(500).json({ error: err.code });
+            }
+
+            if (!userData.courses.includes(req.params.courseId)) {
+                return res.json({
+                    message: "User was not in course"
+                });
+            }
+            const allCourses = userData.courses.filter(course => course !== req.params.courseId);
+            userDoc
+                .update({ courses: allCourses })
+                .then(() => {
+                    return res.json({ message: "Course removed successfully" });
+                })
+                .catch(err => {
+                    console.error(err);
+                    return res.status(500).json({ error: err.code });
+                });
+        })
+        .catch(err => {
+            console.error(err);
+            return res.status(500).json({ error: err.code });
+        });
 };

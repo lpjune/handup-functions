@@ -25,7 +25,8 @@ const {
     getAuthenticatedUser,
     getUserDetails,
     markNotificationsRead,
-    joinCourse
+    joinCourse,
+    leaveCourse
 } = require("./handlers/users");
 
 // Question routes
@@ -67,7 +68,8 @@ app.get("/user/:handle", getUserDetails);
 app.post("/notifications", FBAuth, markNotificationsRead);
 // Join course
 app.post("/user/courses/:courseId", FBAuth, joinCourse);
-
+// Leave course
+app.delete("/user/courses/:courseId", FBAuth, leaveCourse);
 
 
 exports.api = functions.https.onRequest(app);
