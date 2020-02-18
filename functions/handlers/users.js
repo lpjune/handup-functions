@@ -51,7 +51,8 @@ exports.signup = (req, res) => {
                 email: newUser.email,
                 createdAt: new Date().toISOString(),
                 imageUrl: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${noImg}?alt=media`,
-                userId
+                userId,
+                courses: []
             };
             return db.doc(`/users/${newUser.handle}`).set(userCredentials);
         })
@@ -276,6 +277,7 @@ exports.markNotificationsRead = (req, res) => {
         });
 };
 
+// Join a course
 // TODO: add course object not just string id
 exports.joinCourse = (req, res) => {
     userDoc = db.doc(`/users/${req.user.handle}`);
@@ -283,21 +285,13 @@ exports.joinCourse = (req, res) => {
     userDoc
         .get()
         .then(doc => {
-            userData = doc.data()
+            userData = doc.data();
             if (!doc.exists) {
-                doc.set({ courses: allCourses })
-                    .then(() => {
-                        return res.json({
-                            message: "Course added successfully"
-                        });
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        return res.status(500).json({ error: err.code });
-                    });
+                console.error(err);
+                return res.status(500).json({ error: err.code });
             }
 
-            if(userData.courses.includes(req.params.courseId)) {
+            if (userData.courses.includes(req.params.courseId)) {
                 return res.json({
                     message: "Course already added"
                 });
@@ -306,7 +300,8 @@ exports.joinCourse = (req, res) => {
             userData.courses.forEach(course => {
                 allCourses.push(course);
             });
-            db.doc(`/users/${req.user.handle}`).update({ courses: allCourses })
+            db.doc(`/users/${req.user.handle}`)
+                .update({ courses: allCourses })
                 .then(() => {
                     return res.json({ message: "Course added successfully" });
                 })
@@ -319,4 +314,9 @@ exports.joinCourse = (req, res) => {
             console.error(err);
             return res.status(500).json({ error: err.code });
         });
+};
+
+// Leave a course
+exports.leaveCourse = (req, res) => {
+    userDoc = db.doc(`/users/${req.user.handle}`);
 };
